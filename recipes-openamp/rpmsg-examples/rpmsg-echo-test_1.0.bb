@@ -1,23 +1,29 @@
 SUMMARY = "RPMsg examples: echo test demo"
 
+HOMEPAGE = "https://github.com/OpenAMP/openamp-system-reference"
 LICENSE = "BSD"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=b30cbe0b980e98bfd9759b1e6ba3d107"
+LIC_FILES_CHKSUM = "file://examples/linux/rpmsg-echo-test/LICENSE;md5=b30cbe0b980e98bfd9759b1e6ba3d107"
 
-SRC_URI = "\
-	file://LICENSE \
-	file://Makefile \
-	file://echo_test.c \
-	"
+REPO ?= "git://github.com/OpenAMP/openamp-system-reference;protocol=https"
 
-S = "${WORKDIR}"
+BRANCH = "main"
+SRC_URI = "${REPO};branch=${BRANCH};"
+SRCREV = "${AUTOREV}"
+SRC_URI[sha256sum] = "96169ab95166de8b8a8c18e4084948af66b03c5e22305fa736cfbd2620b5fd7e"
+
+S = "${WORKDIR}/git"
 
 RRECOMMENDS_${PN} = "kernel-module-rpmsg-char"
 
+EXTRA_OEMAKE += " \
+	-C ${S}/examples/linux/rpmsg-echo-test \
+	"
+
 FILES_${PN} = "\
-	/usr/bin/echo_test\
+	/usr/bin/echo_test \
 "
 
 do_install () {
 	install -d ${D}/usr/bin
-	install -m 0755 echo_test ${D}/usr/bin/echo_test
+	install -m 0755 examples/linux/rpmsg-echo-test/echo_test ${D}/usr/bin/echo_test
 }
